@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ford - Contato</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .erro-campo {
+            display: none;
+            color: #c0392b;
+            font-size: 0.85em;
+            margin: 2px 0 8px 0;
+        }
+        input.campo-invalido,
+        textarea.campo-invalido {
+            border: 1px solid #c0392b;
+        }
+        #mensagem {
+            resize: vertical;
+            min-height: 80px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container-header">
+            <img src="img/logo-ford-256.png" alt="Logomarca da Ford">
+            <nav>
+                <ul>
+                    <li><a href="index.html">Principal</a></li>
+                    <li><a href="lancamento.html">Novidades e Lançamentos</a></li>
+                    <li><a href="contato.html">Como falar conosco</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="formulario-contato">
+            <h2>Fale Conosco</h2>
+            <form action="#" method="POST" id="form-contato" novalidate>
+                <label for="nome">Nome:</label>
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+"
+                    title="Digite apenas letras"
+                    required>
+                <span class="erro-campo" id="erro-nome">Nome inválido: use apenas letras (sem números ou símbolos).</span>
+
+                <label for="email">E-mail:</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    title="Digite um e-mail válido, ex: nome@gmail.com"
+                    required>
+                <span class="erro-campo" id="erro-email">E-mail inválido. Use um formato como nome@gmail.com.</span>
+
+                <label for="telefone">Telefone:</label>
+                <input
+                    type="tel"
+                    id="telefone"
+                    name="telefone"
+                    pattern="[0-9]+"
+                    title="Digite apenas números"
+                    inputmode="numeric">
+                <span class="erro-campo" id="erro-telefone">Telefone inválido: use apenas números.</span>
+
+                <label for="tipo_contato">Tipo de Contato:</label>
+                <select id="tipo_contato" name="tipo_contato">
+                    <option value="elogio">Elogio</option>
+                    <option value="reclamacao">Reclamação</option>
+                    <option value="solicitacao">Solicitação</option>
+                </select>
+        
+                <label for="mensagem">Mensagem:</label>
+                <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
+                <span class="erro-campo" id="erro-mensagem">Por favor, escreva sua mensagem.</span>
+        
+                <button type="submit" class="btn-enviar">Enviar</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container-footer">
+            <div class="social-links">
+                <span class="social-text">Redes Sociais:</span>
+                <a href="https://www.youtube.com/@fordbrasil" target="_blank">
+                    <img src="img/youtube-squared-50.png" alt="YouTube Ford">
+                </a>
+                <a href="https://www.facebook.com/FordBrasil" target="_blank">
+                    <img src="img/facebook-50.png" alt="Facebook Ford">
+                </a>
+                <a href="https://www.instagram.com/fordbrasil/" target="_blank">
+                    <img src="img/instagram-logo-50.png" alt="Instagram Ford">
+                </a>
+            </div>
+            <p>© 2025 Ford. Todos os direitos reservados.</p>
+            <div class="logo-footer">
+                <img src="img/ford-96.png" alt="Logomarca Ford">
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            var form = document.getElementById('form-contato');
+            var nome = document.getElementById('nome');
+            var email = document.getElementById('email');
+            var telefone = document.getElementById('telefone');
+            var mensagem = document.getElementById('mensagem');
+
+            var erroNome = document.getElementById('erro-nome');
+            var erroEmail = document.getElementById('erro-email');
+            var erroTelefone = document.getElementById('erro-telefone');
+            var erroMensagem = document.getElementById('erro-mensagem');
+
+            function mostrarErro(campo, erro, mostrar) {
+                campo.classList.toggle('campo-invalido', mostrar);
+                erro.style.display = mostrar ? 'block' : 'none';
+            }
+
+            // Bloqueia a digitação de números/símbolos no campo Nome
+            nome.addEventListener('keypress', function (e) {
+                var permitido = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]$/;
+                if (!permitido.test(e.key)) {
+                    e.preventDefault();
+                }
+            });
+            nome.addEventListener('input', function () {
+                // Remove qualquer caractere inválido colado no campo
+                var valido = nome.value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, '');
+                if (valido !== nome.value) nome.value = valido;
+                mostrarErro(nome, erroNome, nome.value.trim() !== '' && !nome.checkValidity());
+            });
+
+            // Bloqueia a digitação de letras/símbolos no campo Telefone
+            telefone.addEventListener('keypress', function (e) {
+                var permitido = /^[0-9]$/;
+                if (!permitido.test(e.key)) {
+                    e.preventDefault();
+                }
+            });
+            telefone.addEventListener('input', function () {
+                var valido = telefone.value.replace(/[^0-9]/g, '');
+                if (valido !== telefone.value) telefone.value = valido;
+                mostrarErro(telefone, erroTelefone, telefone.value.trim() !== '' && !telefone.checkValidity());
+            });
+
+            // Valida o formato do e-mail conforme o usuário digita
+            email.addEventListener('input', function () {
+                mostrarErro(email, erroEmail, email.value.trim() !== '' && !email.checkValidity());
+            });
+
+            // Valida se a mensagem foi preenchida
+            mensagem.addEventListener('input', function () {
+                mostrarErro(mensagem, erroMensagem, mensagem.value.trim() === '');
+            });
+
+            // Validação final ao enviar o formulário
+            form.addEventListener('submit', function (e) {
+                var temErro = false;
+
+                if (!nome.checkValidity() || nome.value.trim() === '') {
+                    mostrarErro(nome, erroNome, true);
+                    temErro = true;
+                }
+                if (!email.checkValidity()) {
+                    mostrarErro(email, erroEmail, true);
+                    temErro = true;
+                }
+                if (telefone.value.trim() !== '' && !telefone.checkValidity()) {
+                    mostrarErro(telefone, erroTelefone, true);
+                    temErro = true;
+                }
+                if (mensagem.value.trim() === '') {
+                    mostrarErro(mensagem, erroMensagem, true);
+                    temErro = true;
+                }
+
+                if (temErro) {
+                    e.preventDefault();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
